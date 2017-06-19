@@ -28,7 +28,10 @@ public:
   * A helper method to calculate Jacobians.
   */
   MatrixXd CalculateJacobian(const VectorXd& x_state);
-
+ /**
+  * A helper method to calculate process noise Q
+  */
+  MatrixXd CalculateQ(const float ax,const float ay, const float deltaT);
 };
 
 #endif /* TOOLS_H_ */
