@@ -72,20 +72,20 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
           py*(vx*py - vy*px)/c3, px*(px*vy - py*vx)/c3, px/c2, py/c2;
     return  Hj;
 }
-MatrixXd Tools::CalculateQ(const float ax2, const float ay2, const float deltaT) {
+MatrixXd Tools::CalculateQ(const float ax2, const float ay2, const float dt) {
   /**
    * TODO
    * Calculate process noise Q here
    */
     MatrixXd Q(4 ,4);
-    double deltaT2 = pow(deltaT, 2);
-    double deltaT4 = deltaT2*deltaT2;
-    double deltaT3 = deltaT2*deltaT;
+    double dt2 = pow(dt, 2);
+    double dt4 = dt2*dt2;
+    double dt3 = dt2*dt;
 
-    Q << deltaT4*ax2/4, 0, deltaT3*ax2/2, 0,
-         0, deltaT4*ay2/4, 0, deltaT3*ay2/2,
-         deltaT3*ax2/2, 0, deltaT2*ax2, 0,
-         0, deltaT3*ay2/2, 0, deltaT2*ay2;
+    Q << dt4*ax2/4, 0, dt3*ax2/2, 0,
+         0, dt4*ay2/4, 0, dt3*ay2/2,
+         dt3*ax2/2, 0, dt2*ax2, 0,
+         0, dt3*ay2/2, 0, dt2*ay2;
 
     return Q;
 }
