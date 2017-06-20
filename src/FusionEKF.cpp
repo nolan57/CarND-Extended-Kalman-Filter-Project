@@ -113,9 +113,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       double vx = dpx / dt;
       double vy = dpy / dt;
       x_s << px, py, vx, vy;
-
-      H_laser_(0, 2) = dt;
-      H_laser_(1, 3) = dt;
+        ;
       ekf_.H_ = H_laser_;
       ekf_.R_ = R_laser_;
       //ekf_.x_ = x_s;
