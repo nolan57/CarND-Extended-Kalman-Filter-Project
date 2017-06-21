@@ -62,7 +62,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   double dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
   previous_timestamp_ = measurement_pack.timestamp_;
   VectorXd x_s(4);
-  Tools tools;
+  //Tools tools;
 
   if (!is_initialized_) {
     /**
