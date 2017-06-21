@@ -18,20 +18,20 @@ FusionEKF::FusionEKF() {
 
   // initializing matrices
   //R_laser_ = MatrixXd(2, 2);
-  MatrixXd R_laser_(2, 2);
+  MatrixXd r_laser_(2, 2);
   //R_radar_ = MatrixXd(3, 3);
-  MatrixXd R_radar_(3, 3);
+  MatrixXd r_radar_(3, 3);
   //H_laser_ = MatrixXd(2, 4);
-  MatrixXd H_laser_(2, 4);
+  MatrixXd h_laser_(2, 4);
   //Hj_ = MatrixXd(3, 4);
-  MatrixXd Hj_(3, 4);
+  MatrixXd hj_(3, 4);
 
   //measurement covariance matrix - laser
-  R_laser_ << 0.0225, 0,
+  r_laser_ << 0.0225, 0,
         0, 0.0225;
 
   //measurement covariance matrix - radar
-  R_radar_ << 0.09, 0, 0,
+  r_radar_ << 0.09, 0, 0,
         0, 0.0009, 0,
         0, 0, 0.09;
 
@@ -40,11 +40,17 @@ FusionEKF::FusionEKF() {
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
-  H_laser_ << 1, 0, 0, 0,
+  h_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
-  Hj_ << 0, 0, 0, 0,
+
+  hj_ << 0, 0, 0, 0,
          0, 0, 0, 0,
          0, 0, 0, 0;
+
+  R_laser_ = r_laser_;
+  R_radar_ = r_radar_;
+  H_laser_ = h_laser_;
+  Hj_      = hj_;
 
 }
 
@@ -64,7 +70,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   VectorXd x_s(4);
   //Tools tools;
 
-  if (!is_initialized_) {
+  if (is_initialized_) {
     /**
     TODO:
       * Initialize the state ekf_.x_ with the first measurement.
@@ -104,7 +110,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Initialize state.
       */
-
       double px = measurement_pack.raw_measurements_(0);
       double py = measurement_pack.raw_measurements_(1);
 
@@ -118,7 +123,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       ekf_.R_ = R_laser_;
       //ekf_.x_ = x_s;
 
-    }
+    }}else{
 
     // done initializing, no need to predict or update
     VectorXd x_in(4);
@@ -126,8 +131,12 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     MatrixXd F_in(4, 4);
     MatrixXd Q_in(4, 4);
 
-    x_in.setZero();
-    Q_in.setZero();
+    x_in << 0, 0, 0, 0;
+    Q_in << 0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0;
+
     P_in << 1, 0, 0, 0,
             0, 1, 0, 0,
             0, 0, 1000, 0,
@@ -141,12 +150,17 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // Radar updates
       ekf_.Init(x_in, P_in, F_in, Hj_, R_radar_, Q_in);
+      cout << "initialized_ for RADAR" << endl;
     } else {
       // Laser updates
       ekf_.Init(x_in, P_in, F_in, H_laser_, R_laser_, Q_in);
+      cout << "initialized_ for LIDAR" << endl;
     }
 
     is_initialized_ = true;
+
+    cout << "initialized_" << endl;
+
     return;
   }
 
@@ -163,7 +177,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
   ekf_.F_(0, 2) = dt;
   ekf_.F_(1, 3) = dt;
-  ekf_.Q_ = tools.CalculateQ(9, 9, dt);
+  ekf_.Q_ = tools.CalculateQ(9.0, 9.0, dt);
   ekf_.Predict();
 
   /*****************************************************************************
@@ -178,10 +192,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
-    ekf_.Update(measurement_pack.raw_measurements_);
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_);
   } else {
     // Laser updates
-    ekf_.UpdateEKF(x_s);
+    ekf_.Update(x_s);
   }
 
   // print the output
