@@ -53,14 +53,14 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     * Calculate a Jacobian here.
   */
     MatrixXd Hj (3, 4);
-    double px = x_state(0);
-    double py = x_state(1);
-    double vx = x_state(2);
-    double vy = x_state(3);
+    float px = x_state(0);
+    float py = x_state(1);
+    float vx = x_state(2);
+    float vy = x_state(3);
 
-    double c1 = px*px + py*py;
-    double c2 = sqrt(c1);
-    double c3 = c1*c2;
+    float c1 = px*px + py*py;
+    float c2 = sqrt(c1);
+    float c3 = c1*c2;
 
     if(fabs(c1) < 0.0001){
         cout << "CalculateJacobian () - Error - Division by Zero" << endl;
@@ -78,14 +78,14 @@ MatrixXd Tools::CalculateQ(const float ax2, const float ay2, const float dt) {
    * Calculate process noise Q here
    */
     MatrixXd Q(4 ,4);
-    double dt2 = pow(dt, 2);
-    double dt4 = dt2*dt2;
-    double dt3 = dt2*dt;
+    float dt2 = pow(dt, 2);
+    float dt4 = dt2*dt2;
+    float dt3 = dt2*dt;
 
-    Q << dt4*ax2/4, 0, dt3*ax2/2, 0,
-         0, dt4*ay2/4, 0, dt3*ay2/2,
-         dt3*ax2/2, 0, dt2*ax2, 0,
-         0, dt3*ay2/2, 0, dt2*ay2;
+    Q << dt4*ax2/4, 0,         dt3*ax2/2, 0,
+         0,         dt4*ay2/4, 0,         dt3*ay2/2,
+         dt3*ax2/2, 0,         dt2*ax2,   0,
+         0,         dt3*ay2/2, 0,         dt2*ay2;
 
     return Q;
 }
