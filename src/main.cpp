@@ -42,6 +42,8 @@ int main()
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
+    VectorXd limit(4);
+    limit << (0.11, 0.11, 0.52, 0.52);
 
     if (length && length > 2 && data[0] == '4' && data[1] == '2')
     {
@@ -57,7 +59,7 @@ int main()
           // j[1] is the data JSON object
           
           string sensor_measurment = j[1]["sensor_measurement"];
-          
+
           MeasurementPackage meas_package;
           istringstream iss(sensor_measurment);
     	  long long timestamp;
@@ -127,11 +129,22 @@ int main()
     	  estimate(1) = p_y;
     	  estimate(2) = v1;
     	  estimate(3) = v2;
-    	  
-    	  estimations.push_back(estimate);
+
+          estimations.push_back(estimate);
 
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
+          if ((RMSE - limit).any() > 0.0 ){
+              cout << "over limit!" << endl << endl;
+              cout << "sensor_measurment :" << endl << sensor_measurment << endl << endl;
+              cout << "error : " << endl
+                   << "estimate" << endl << estimate << endl << endl
+                   << "ground true value" << endl << gt_values << endl << endl
+                   << "error = " << endl << estimate - gt_values << endl << endl;
+              cout << "RMSE :" << endl << RMSE << endl << endl;
+
+          }
+          //cout << "RMSE :" << endl << RMSE << endl << endl;
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;

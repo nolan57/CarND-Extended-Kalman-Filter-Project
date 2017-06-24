@@ -18,35 +18,27 @@ FusionEKF::FusionEKF() {
 
   // initializing matrices
   R_laser_ = MatrixXd(2, 2);
-  //MatrixXd r_laser_(2, 2);
   R_radar_ = MatrixXd(3, 3);
-  //MatrixXd r_radar_(3, 3);
   H_laser_ = MatrixXd(2, 4);
-  //MatrixXd h_laser_(2, 4);
   Hj_ = MatrixXd(3, 4);
-  //MatrixXd hj_(3, 4);
 
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
               0, 0.0225;
-  //R_laser_ = r_laser_;
 
   //measurement covariance matrix - radar
   R_radar_ << 0.09, 0, 0,
               0, 0.0009, 0,
               0, 0, 0.09;
-  //R_radar_ = r_radar_;
 
   //Measurement matrix - laser
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
-  //H_laser_ = h_laser_;
 
   //Measurement matrix - radar
   Hj_ << 1, 1, 0, 0,
          1, 1, 0, 0,
          1, 1, 1, 1;
-  //Hj_  = hj_;
 
   /**
   TODO:
@@ -78,13 +70,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
 
-    //VectorXd x_in(4);
-    //MatrixXd P_in(4 ,4);
-    //MatrixXd F_in(4, 4);
     ekf_.x_ = VectorXd(4);
     ekf_.P_ = MatrixXd(4, 4);
     ekf_.F_ = MatrixXd(4, 4);
-    //MatrixXd Q_in(4, 4);
 
     ekf_.x_ << 1, 1, 1, 1;
     ekf_.P_ << 1, 0, 0, 0,
@@ -166,7 +154,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
   float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
-  cout << "dt = " << dt << endl;
+  //cout << "dt = " << dt << endl;
   previous_timestamp_ = measurement_pack.timestamp_;
 
   ekf_.F_(0, 2) = dt;
@@ -198,6 +186,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   }
 
   // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+  //cout << "x_ = " << ekf_.x_ << endl;
+  //cout << "P_ = " << ekf_.P_ << endl;
 }
