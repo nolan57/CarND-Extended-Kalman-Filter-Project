@@ -28,8 +28,11 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     }
 
     //accumulate squared residuals
-    for(unsigned int i=10; i < estimations.size(); ++i){
-
+    for(unsigned int i=0; i < estimations.size(); ++i){
+      //ignore the first 10 data
+        if(i < 10){
+          continue;
+          )
         VectorXd residual = estimations[i] - ground_truth[i];
 
         //if ((residual.maxCoeff() > 5) | (residual.minCoeff() < -5)){
