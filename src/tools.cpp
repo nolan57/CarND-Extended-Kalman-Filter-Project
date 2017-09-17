@@ -28,21 +28,21 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     }
 
     //accumulate squared residuals
-    for(unsigned int i=0; i < estimations.size(); ++i){
+    for(unsigned int i=10; i < estimations.size(); ++i){
 
         VectorXd residual = estimations[i] - ground_truth[i];
 
-        if ((residual.maxCoeff() > 5) | (residual.minCoeff() < -5)){
+        //if ((residual.maxCoeff() > 5) | (residual.minCoeff() < -5)){
 
-            residual.setZero();
-        }
+        //     residual.setZero();
+        //}
         //coefficient-wise multiplication
         residual = residual.array()*residual.array();
         rmse += residual;
     }
 
     //calculate the mean
-    rmse = rmse/estimations.size();
+    rmse = rmse/(estimations.size()-10);
 
     //calculate the squared root
     rmse = rmse.array().sqrt();
