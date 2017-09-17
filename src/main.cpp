@@ -66,6 +66,7 @@ int main()
 
     	  // reads first element from the current line
     	  string sensor_type;
+
     	  iss >> sensor_type;
 
     	  if (sensor_type.compare("L") == 0) {
@@ -139,10 +140,7 @@ int main()
 		      cout << "R over limit!" << endl << endl;}
 	      else{
 		      cout << "L over limit!" << endl << endl;}  
-              //cout << "Over limit!" << endl << endl;
-              //cout << "sensor_measurment :" << endl << sensor_measurment << endl << endl;
-              cout << "error = " << estimate-gt_values << endl << endl;
-              cout << "RMSE = " << RMSE << endl << endl;
+              //cout << "RMSE = " << RMSE << endl << endl;
 
           }
           //cout << "RMSE :" << endl << RMSE << endl << endl;
