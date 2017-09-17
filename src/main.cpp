@@ -135,13 +135,14 @@ int main()
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
           if ((RMSE - limit).any() > 0.0 ){
-              cout << "over limit!" << endl << endl;
-              cout << "sensor_measurment :" << endl << sensor_measurment << endl << endl;
-              cout << "error : " << endl
-                   << "estimate" << endl << estimate << endl << endl
-                   << "ground true value" << endl << gt_values << endl << endl
-                   << "error = " << endl << estimate - gt_values << endl << endl;
-              cout << "RMSE :" << endl << RMSE << endl << endl;
+	      if(sensor_type.compare("R") == 0){
+		      cout << "R over limit!" << endl << endl;}
+	      else{
+		      cout << "L over limit!" << endl << endl;}  
+              //cout << "Over limit!" << endl << endl;
+              //cout << "sensor_measurment :" << endl << sensor_measurment << endl << endl;
+              cout << "error = " << estimate-gt_values << endl << endl;
+              cout << "RMSE = " << RMSE << endl << endl;
 
           }
           //cout << "RMSE :" << endl << RMSE << endl << endl;
