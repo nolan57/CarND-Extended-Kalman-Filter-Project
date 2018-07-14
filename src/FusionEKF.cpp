@@ -36,16 +36,36 @@ FusionEKF::FusionEKF() {
               0, 1, 0, 0;
 
   //Measurement matrix - radar
+  /*
   Hj_ << 1, 1, 0, 0,
          1, 1, 0, 0,
          1, 1, 1, 1;
-
+  */
   /**
   TODO:
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
+  ekf_.R_ = MatrixXd(2,2);
+  ekf_.H_ = MatrixXd(2,4);
+  ekf_.x_ = VectorXd(4);
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.F_ = MatrixXd(4, 4);
+  ekf_.Q_ = MatrixXd(4,4);
 
+  ekf_.R_ = 0.0225, 0,
+		  0, 0.0225;
+  ekf_.H_ = 1, 0, 0, 0,
+		   0, 1, 0, 0;
+  ekf_.x_ << 1, 1, 1, 1;
+  ekf_.P_ << 1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1000, 0,
+             0, 0, 0, 1000;
+  ekf_.F_ << 1, 0, 1, 0,
+             0, 1, 0, 1,
+             0, 0, 1, 0,
+             0, 0, 0, 1;
 }
 
 /**
@@ -69,7 +89,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       * Create the covariance matrix.
       * Remember: you'll need to convert radar from polar to cartesian coordinates.
     */
-
+	/*
     ekf_.x_ = VectorXd(4);
     ekf_.P_ = MatrixXd(4, 4);
     ekf_.F_ = MatrixXd(4, 4);
@@ -83,12 +103,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
                0, 1, 0, 1,
                0, 0, 1, 0,
                0, 0, 0, 1;
-    //Q_in << 0, 0, 0, 0,
-    //        0, 0, 0, 0,
-    //        0, 0, 0, 0,
-    //        0, 0, 0, 0;
+    */
+
     // first measurement
-    cout << "EKF: " << endl;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       /**
@@ -126,6 +143,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       //x_in(1) = py;
       ekf_.x_(0) = px;
       ekf_.x_(1) = py;
+      ekf_.x_(2) = 0;
+      ekf_.x_(3) = 0;
       //x_s << px, py, vx, vy;
 
       //ekf_.Init(x_in, P_in, F_in, H_laser_, R_laser_, Q_in);
@@ -134,10 +153,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
 
     // done initializing, no need to predict or update
-
+    previous_timestamp_ = measurement_pack.timestamp_;
     is_initialized_ = true;
 
-    cout << "initialized is done!" << endl;
+    //cout << "initialized is done!" << endl;
 
     return;
   }
