@@ -53,9 +53,9 @@ FusionEKF::FusionEKF() {
   ekf_.F_ = MatrixXd(4, 4);
   ekf_.Q_ = MatrixXd(4,4);
 
-  ekf_.R_ = 0.0225, 0,
+  ekf_.R_ << 0.0225, 0,
 		  0, 0.0225;
-  ekf_.H_ = 1, 0, 0, 0,
+  ekf_.H_ << 1, 0, 0, 0,
 		   0, 1, 0, 0;
   ekf_.x_ << 1, 1, 1, 1;
   ekf_.P_ << 1, 0, 0, 0,
