@@ -123,11 +123,14 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float py = sin(theta) * ro;
       float vx = cos(theta) * ro_dot;
       float vy = sin(theta) * ro_dot;
-      //ekf_.x_ << px, py, vx, vy;
+
+      ekf_.x_ << px, py, vx, vy;
+      /*
       ekf_.x_(0) = px;
       ekf_.x_(1) = py;
       ekf_.x_(2) = vx;
       ekf_.x_(3) = vy;
+      */
 
       //ekf_.Init(x_in, P_in, F_in, Hj_, R_radar_, Q_in);
 
@@ -139,12 +142,15 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float px = measurement_pack.raw_measurements_(0);
       float py = measurement_pack.raw_measurements_(1);
 
+      ekf_.x_ << px, py, 0, 0;
       //x_in(0) = px;
       //x_in(1) = py;
+      /*
       ekf_.x_(0) = px;
       ekf_.x_(1) = py;
       ekf_.x_(2) = 0;
       ekf_.x_(3) = 0;
+      */
       //x_s << px, py, vx, vy;
 
       //ekf_.Init(x_in, P_in, F_in, H_laser_, R_laser_, Q_in);
