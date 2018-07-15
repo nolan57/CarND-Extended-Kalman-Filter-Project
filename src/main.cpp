@@ -71,8 +71,8 @@ int main()
 
     	  if (sensor_type.compare("L") == 0) {
       	  		meas_package.sensor_type_ = MeasurementPackage::LASER;
-                VectorXd raw_measurements_(2);
-          		//meas_package.raw_measurements_ = VectorXd(2);
+                //VectorXd raw_measurements_(2);
+          		meas_package.raw_measurements_ = VectorXd(2);
           		float px;
       	  		float py;
           		iss >> px;
@@ -140,9 +140,8 @@ int main()
 		      cout << "R over limit!" << endl << endl;}
 	      else{
 		      cout << "L over limit!" << endl << endl;}  
-              //cout << "RMSE = " << RMSE << endl << endl;
           }
-          //cout << "RMSE :" << endl << RMSE << endl << endl;
+
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
