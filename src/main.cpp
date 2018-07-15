@@ -14,6 +14,7 @@ using json = nlohmann::json;
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
 std::string hasData(std::string s) {
+  //cout << "hasData" << endl;
   auto found_null = s.find("null");
   auto b1 = s.find_first_of("[");
   auto b2 = s.find_first_of("]");
@@ -28,6 +29,7 @@ std::string hasData(std::string s) {
 
 int main()
 {
+  //cout << "start";
   uWS::Hub h;
 
   // Create a Kalman Filter instance
@@ -39,11 +41,13 @@ int main()
   vector<VectorXd> ground_truth;
 
   h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+    //cout << "onMessage" << endl;
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
-    VectorXd limit(4);
-    limit << (0.11, 0.11, 0.52, 0.52);
+
+    //VectorXd limit(4);
+    //limit << 0.11, 0.11, 0.52, 0.52;
 
     if (length && length > 2 && data[0] == '4' && data[1] == '2')
     {
@@ -108,6 +112,7 @@ int main()
     	  iss >> vx_gt;
     	  iss >> vy_gt;
     	  VectorXd gt_values(4);
+          //cout << "gt_values is good";
     	  gt_values(0) = x_gt;
     	  gt_values(1) = y_gt; 
     	  gt_values(2) = vx_gt;
@@ -135,12 +140,14 @@ int main()
 
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
 
+          /*
           if ((RMSE - limit).any() > 0.0 ){
 	      if(sensor_type.compare("R") == 0){
 		      cout << "R over limit!" << endl << endl;}
 	      else{
 		      cout << "L over limit!" << endl << endl;}  
           }
+          */
 
           json msgJson;
           msgJson["estimate_x"] = p_x;
@@ -166,6 +173,7 @@ int main()
   // doesn't compile :-(
   h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data, size_t, size_t) {
     const std::string s = "<h1>Hello world!</h1>";
+    //cout << "onHttpReauest" << endl;
     if (req.getUrl().valueLength == 1)
     {
       res->end(s.data(), s.length());
